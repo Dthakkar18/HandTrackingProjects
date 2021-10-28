@@ -1,3 +1,6 @@
+####################################################
+# This is just a basic testing file for the projects
+####################################################
 import cv2
 import mediapipe as mp
 import time
