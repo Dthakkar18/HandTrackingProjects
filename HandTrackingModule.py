@@ -14,7 +14,7 @@ class handDetector():
         self.hands = self.mpHands.Hands()
         self.mpDraw = mp.solutions.drawing_utils #draw on the hands
 
-        self.tipIds = [4, 8, 12, 16]
+        self.tipIds = [4, 8, 12, 16, 20]
 
     def findHands(self, img, draw=True):
         #convert to RGB
@@ -61,13 +61,13 @@ class handDetector():
 
         #other 4 fingers
         for id in range(1, 5):
-            if self.lmList[self.tipIds[id]][2] > self.lmList[self.tipIds[id] - 2][2]:
+            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
                 fingers.append(1)
             else:
                 fingers.append(0)
         return fingers
 
-    def findDistance(self, p1, p2, img, draw= True, r= 15, t= 3):
+    def findDistance(self, p1, p2, img, draw= True, r= 5, t= 3):
         #positions of two finger tips
         x1, y1 = self.lmList[p1][1:]
         x2, y2 = self.lmList[p2][1:]
@@ -80,10 +80,11 @@ class handDetector():
             #draw circles on 2 finger tips
             cv2.circle(img, (x1, y1), r, (255, 0, 255), cv2.FILLED)
             cv2.circle(img, (x2, y2), r, (255, 0, 255), cv2.FILLED)
-            #draw center circle
-            cv2.circle(img, (cx, cy), r, (0, 0, 255), cv2.FILLED)
+            
         #length of line between two finger tips
-        length = math.hypot(x2, x1, y2 - y1)
+        length = math.hypot(x2 - x1, y2 - y1)
+        
+        
 
         return length, img, [x1, y1, x2, y2, cx, cy]
 
