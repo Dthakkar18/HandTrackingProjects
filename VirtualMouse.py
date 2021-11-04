@@ -1,29 +1,29 @@
 import cv2
 import numpy as np
-from numpy.lib.stride_tricks import DummyArray
 import HandTrackingModule as htm
 import time
-import math
 import mouse
-import pyautogui as pag #find python library that controls the mouse 
+import pyautogui as pag 
 
-#creating width and height parameters
-wCam, hCam = 640, 480
+# 6:36
 
-frameR = 150
+wCam, hCam = 640, 480 #creating width and height parameters
+frameR = 150 #frame reduction
+smoothening = 5 #smoothen value
 
-wScr, hScr = pag.size()
+wScr, hScr = pag.size() #screen size
 
-cTime = 0
-pTime = 0
+cTime = 0 #curent time
+pTime = 0 #previous time
+plocX, plocY = 0, 0 #current x location 
+clocX, clocY = 0, 0 #current y location
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0) #your laptop camera 
 cap.set(3, wCam)
 cap.set(4, hCam)
 
 detector = htm.handDetector(detectionConf=0.7)
 
-print(pag.size())
 
 while True:
     success, img = cap.read()
@@ -49,10 +49,19 @@ while True:
             #converting coordinates 
             x3 = np.interp(x1, (frameR, wCam - frameR), (0, wScr))
             y3 = np.interp(y1, (frameR, hCam - frameR), (0, hScr))
-            mouse.move(wScr - x3, y3, absolute=True, duration=0)   
+
+            #smoothened values
+            clocX = plocX + (x3 - plocX) / smoothening
+            clocY = plocY + (y3 - plocY) / smoothening
+
+            #move the mouse
+            mouse.move(wScr - clocX, clocY, absolute=True, duration=0) 
+            plocX, plocY = clocX, clocY  
+
         if(fingersList == [0, 1, 1, 0, 0]):
             distance = detector.findDistance(8, 12, img)
             length = distance[0]
+
             #draw center circle  and make it red
             cv2.circle(img, (distance[2][4], distance[2][5]), 5, (0, 0, 255), cv2.FILLED)
             if(length < 15):
@@ -60,6 +69,7 @@ while True:
                 #draw circle black if "clicked"
                 cv2.circle(img, (distance[2][4], distance[2][5]), 5, (0, 0, 0), cv2.FILLED)
                 print("Right click!")
+
         if(fingersList == [0, 0, 0, 0, 1]):
             pag.scroll(100)
             print("Scroll up!")
