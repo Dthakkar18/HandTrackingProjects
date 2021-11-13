@@ -5,8 +5,6 @@ import time
 import mouse
 import pyautogui as pag 
 
-# 6:36
-
 wCam, hCam = 640, 480 #creating width and height parameters
 frameR = 150 #frame reduction
 smoothening = 5 #smoothen value
