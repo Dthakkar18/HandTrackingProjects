@@ -1,6 +1,9 @@
+
+from contextlib import nullcontext
 import cv2
 import numpy as np
 import HandTrackingModule as htm
+import SpeechRecognitionModule as srm
 import time
 import mouse
 import pyautogui as pag 
@@ -41,7 +44,7 @@ while True:
         #frame reduction 
         cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR), (255, 0, 255), 2)
 
-        if(fingersList == [0, 1, 0, 0, 0]):
+        if fingersList == [0, 1, 0, 0, 0]:
             cv2.circle(img, (x1, y1), 10, (255, 0, 255), cv2.FILLED)
             
             #converting coordinates 
@@ -56,24 +59,30 @@ while True:
             mouse.move(wScr - clocX, clocY, absolute=True, duration=0) 
             plocX, plocY = clocX, clocY  
 
-        if(fingersList == [0, 1, 1, 0, 0]):
+        if fingersList == [0, 1, 1, 0, 0]:
             distance = detector.findDistance(8, 12, img)
             length = distance[0]
 
             #draw center circle  and make it red
             cv2.circle(img, (distance[2][4], distance[2][5]), 5, (0, 0, 255), cv2.FILLED)
-            if(length < 15):
+            if length < 15:
                 mouse.click(button='left')
                 #draw circle black if "clicked"
                 cv2.circle(img, (distance[2][4], distance[2][5]), 5, (0, 0, 0), cv2.FILLED)
                 print("Right click!")
 
-        if(fingersList == [0, 0, 0, 0, 1]):
+        if fingersList == [0, 0, 0, 0, 1]:
             pag.scroll(100)
             print("Scroll up!")
-        if(fingersList == [1, 0, 0, 0, 0]):
+        if fingersList == [1, 0, 0, 0, 0]:
             pag.scroll(-100)
             print("Scroll down!")
+        if fingersList == [1, 0, 0, 0, 1]:
+            speech = srm.speechDetector()
+            words = speech.speechRecognition()
+            print(words)
+            
+                
 
         #print(fingersList)
 

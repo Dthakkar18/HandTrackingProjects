@@ -1,12 +1,12 @@
 import speech_recognition
 import pyttsx3
-import pyautogui
+import pyautogui as pag
 
 class speechDetector():
     def __init__(self):
         pass
 
-    def speechRecognition():
+    def speechRecognition(self):
 
         recognizer = speech_recognition.Recognizer()
 
@@ -23,8 +23,10 @@ class speechDetector():
 
                     print("Text: " + text)
 
-                    if text == "exit":
+                    if text == "stop recording":
                         break
+
+                    pag.write(text, interval=0.25)
 
             except:
                 print("(Wating for word)")
@@ -32,3 +34,11 @@ class speechDetector():
                 continue
 
         print("Thank you for your time")
+
+def main():
+    speech = speechDetector().speechRecognition()
+    print(speech)
+
+
+if __name__ == "__main__":
+    main()
