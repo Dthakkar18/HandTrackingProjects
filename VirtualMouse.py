@@ -77,7 +77,7 @@ while True:
         if fingersList == [1, 0, 0, 0, 0]:
             pag.scroll(-100)
             print("Scroll down!")
-        if fingersList == [1, 0, 0, 0, 1]:
+        if fingersList == [0, 1, 0, 0, 1]:
             speech = srm.speechDetector()
             words = speech.speechRecognition()
             print(words)

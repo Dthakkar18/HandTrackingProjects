@@ -23,7 +23,7 @@ class speechDetector():
 
                     print("Text: " + text)
 
-                    if text == "stop recording":
+                    if text == "exit":
                         break
 
                     pag.write(text, interval=0.25)
